@@ -1,12 +1,25 @@
 {
 	"info": {
-		"_postman_id": "3da4eeec-6238-471f-ab55-ce0d742fa76e",
+		"_postman_id": "f8c2345f-fc09-4380-8b10-15693b22b0ee",
 		"name": "Udacity",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19073641"
 	},
 	"item": [
 		{
 			"name": "Save Customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"OWNER_ID\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -19,7 +32,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Alex\",\r\n  \"phoneNumber\": \"1234567890\"\r\n}",
+					"raw": "{\r\n  \"name\": \"Phoi\",\r\n  \"phoneNumber\": \"1234567890\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,6 +56,18 @@
 		},
 		{
 			"name": "Save Pet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"PET_ID\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -55,7 +80,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"type\": \"CAT\",\r\n  \"name\": \"Kilo\",\r\n  \"birthDate\": \"2019-12-16T04:43:57.995Z\",\r\n  \"notes\": \"HI KILO\"\r\n, \"ownerId\": \"1\"\n}",
+					"raw": "{\r\n  \"type\": \"DOG\",\r\n  \"name\": \"Kong\",\r\n  \"birthDate\": \"2019-12-16T04:43:57.995Z\",\r\n  \"notes\": \"HI KOng\"\r\n, \"ownerId\": {{OWNER_ID}}\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -78,6 +103,18 @@
 		},
 		{
 			"name": "Save Employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"EMPLOYEE_ID\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -90,7 +127,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Hannah\",\r\n  \"skills\": [\"PETTING\", \"FEEDING\"]\r\n}",
+					"raw": "{\r\n  \"name\": \"Oykla\",\r\n  \"skills\": [\"PETTING\", \"FEEDING\", \"WALKING\"],\r\n  \"daysAvailable\":[\"MONDAY\", \"TUESDAY\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -134,7 +171,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/user/employee/1",
+					"raw": "http://localhost:8082/user/employee/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -143,7 +180,13 @@
 					"path": [
 						"user",
 						"employee",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{EMPLOYEE_ID}}"
+						}
 					]
 				}
 			},
@@ -166,7 +209,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"date\": \"2019-12-17\",\n\t\"skills\": [\"PETTING\", \"FEEDING\"]\n}",
+					"raw": "{\n\t\"date\": \"2023-08-14\",\n\t\"skills\": [\"PETTING\", \"FEEDING\", \"WALKING\"]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -192,7 +235,7 @@
 		{
 			"name": "Create Schedule",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
@@ -203,7 +246,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[\"MONDAY\", \"TUESDAY\", \"FRIDAY\"]",
+					"raw": "{\r\n    \"employeeIds\":[{{EMPLOYEE_ID}}],\r\n    \"petIds\":[{{PET_ID}}],\r\n    \"date\":\"2023-08-19\",\r\n    \"activities\":[\"PETTING\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -211,16 +254,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/user/employee/1",
+					"raw": "http://localhost:8082/schedule",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8082",
 					"path": [
-						"user",
-						"employee",
-						"1"
+						"schedule"
 					]
 				}
 			},
@@ -251,7 +292,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/schedule/pet/1",
+					"raw": "http://localhost:8082/schedule/pet/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -260,7 +301,13 @@
 					"path": [
 						"schedule",
 						"pet",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{PET_ID}}"
+						}
 					]
 				}
 			},
@@ -268,9 +315,6 @@
 		},
 		{
 			"name": "Find Schedule By Employee",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -281,17 +325,8 @@
 						"value": "application/json"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\"MONDAY\", \"TUESDAY\", \"FRIDAY\"]",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8082/schedule/employee/2",
+					"raw": "http://localhost:8082/schedule/employee/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -300,7 +335,13 @@
 					"path": [
 						"schedule",
 						"employee",
-						"2"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{EMPLOYEE_ID}}"
+						}
 					]
 				}
 			},
@@ -331,7 +372,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/schedule/employee/2",
+					"raw": "http://localhost:8082/schedule/customer/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -339,8 +380,14 @@
 					"port": "8082",
 					"path": [
 						"schedule",
-						"employee",
-						"2"
+						"customer",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{OWNER_ID}}"
+						}
 					]
 				}
 			},
@@ -410,15 +457,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/user/customer",
+					"raw": "http://localhost:8082/pet",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8082",
 					"path": [
-						"user",
-						"customer"
+						"pet"
 					]
 				}
 			},
@@ -449,7 +495,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/pet/owner/1",
+					"raw": "http://localhost:8082/pet/owner/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -458,7 +504,13 @@
 					"path": [
 						"pet",
 						"owner",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{OWNER_ID}}"
+						}
 					]
 				}
 			},
@@ -489,7 +541,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8082/user/customer/pet/1",
+					"raw": "http://localhost:8082/user/customer/pet/:id",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -499,12 +551,31 @@
 						"user",
 						"customer",
 						"pet",
-						"1"
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{PET_ID}}"
+						}
 					]
 				}
 			},
 			"response": []
 		}
 	],
-	"protocolProfileBehavior": {}
+	"variable": [
+		{
+			"key": "OWNER_ID",
+			"value": ""
+		},
+		{
+			"key": "PET_ID",
+			"value": ""
+		},
+		{
+			"key": "EMPLOYEE_ID",
+			"value": ""
+		}
+	]
 }
