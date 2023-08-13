@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PetServiceImpl implements PetService {
     private final PetRepository petRepository;
     private final CustomerRepository customerRepository;
@@ -27,8 +28,12 @@ public class PetServiceImpl implements PetService {
         this.mapper = mapper;
     }
 
+    /**
+     * Save new pet with existed customer to database
+     * @param petDTO representing the information of a pet
+     * @return a Pet containing stored information
+     */
     @Override
-    @Transactional
     public Pet save(PetDTO petDTO) {
         Pet pet = mapper.map(petDTO, Pet.class);
         Customer owner = customerRepository.getOne(petDTO.getOwnerId());
@@ -38,17 +43,31 @@ public class PetServiceImpl implements PetService {
         return newPet;
     }
 
+    /**
+     * Retrieve the pet with id
+     * @param id representing the id of Pet
+     * @return a existed Pet from database
+     */
     @Override
     public Pet getPet(long id) {
         Optional<Pet> petOptional = petRepository.findById(id);
         return petOptional.orElse(null);
     }
 
+    /**
+     * Retrieve all pets in database
+     * @return a List of existed Pet
+     */
     @Override
     public List<Pet> getPets() {
         return petRepository.findAll();
     }
 
+    /**
+     * Retrieve all pets of a customer
+     * @param ownerId representing the id of customer
+     * @return a list of existed Pet
+     */
     @Override
     public List<Pet> getPetsByOwner(long ownerId) {
         return petRepository.findByCustomerId(ownerId);

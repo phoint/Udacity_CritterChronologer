@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Transactional
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final PetRepository petRepository;
@@ -37,8 +38,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         this.mapper = mapper;
     }
 
+    /**
+     * Create new schedule for pets with available activities
+     * @param scheduleDTO representing an available day for booking activities
+     * @return a Schedule containing the available day, employees, pets and activities stored in database
+     */
     @Override
-    @Transactional
     public Schedule createSchedule(ScheduleDTO scheduleDTO) {
         Schedule schedule = mapper.map(scheduleDTO, Schedule.class);
         List<Pet> pets = scheduleDTO.getPetIds().stream().map(id -> {
@@ -56,21 +61,40 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
+    /**
+     * Retrieve all schedule on database
+     * @return a List of existed Schedule
+     */
     @Override
     public List<Schedule> getAllSchedule() {
         return scheduleRepository.findAll();
     }
 
+    /**
+     * Retrieve all schedule for a pet
+     * @param petId representing the id of pet
+     * @return a List of existed Schedule
+     */
     @Override
     public List<Schedule> getScheduleForPet(long petId) {
         return scheduleRepository.findAllByPets_Id(petId);
     }
 
+    /**
+     * Retrieve all schedule for a employee
+     * @param employeeId representing the id of Employee
+     * @return a List of existed Schedule
+     */
     @Override
     public List<Schedule> getScheduleForEmployee(long employeeId) {
         return scheduleRepository.findAllByEmployees_Id(employeeId);
     }
 
+    /**
+     * Retrieve all schedule for a customer
+     * @param customerId representing the id of Customer
+     * @return a List of existed Schedule
+     */
     @Override
     public List<Schedule> getScheduleForCustomer(long customerId) {
         Customer customer = customerRepository.getOne(customerId);
